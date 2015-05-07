@@ -88,10 +88,12 @@ public class Catalogue {
 				
 				tempRow = iterator.next();
 				
-				if(tempRow.startsWith("//")){ //TODO
+				if(tempRow.startsWith("//")){
 					//do nothing to it and just print
-				} else if(tempRow.startsWith(",")){ //TODO
-					//actually do nothing at all with the line
+					Ordering.add(tempRow);
+					
+				} else if(tempRow.startsWith(",")){
+					//actually do nothing at all with the line, it's considered empty
 				} else {
 					//parse normally and put into new CSV
 					String[] parts = tempRow.split(",");
@@ -142,5 +144,4 @@ public class Catalogue {
 		  e.printStackTrace();
 		}
 	}
-	
 }
