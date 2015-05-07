@@ -1,8 +1,6 @@
 package larsonja.project;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,7 +20,7 @@ public class Catalogue {
 	 * 
 	 */
 	
-	public static int main(String args[]) throws IOException{
+	public static void main(String args[]) throws IOException{
 		
 		String itemName;
 		double count;
@@ -57,12 +55,14 @@ public class Catalogue {
 			
 			System.out.println("Is this correct? Y/N");
 			check = in.nextLine();		
-		} while (check.toLowerCase() != "y");
+		} while (check.toLowerCase().equals("y") == false);
 		in.close(); //am done taking input so close my reader
 		
-		name.concat(".csv"); //add the file extension onto the end of the file name
+		name = name.concat(".csv"); //add the file extension onto the end of the file name
+		try{
+		BufferedReader reader = null;
+		reader = new BufferedReader(new FileReader(name)); //start reading from my file
 		
-		BufferedReader reader = new BufferedReader(new FileReader(name)); //start reading from my file
 		
 		while((row = reader.readLine()) != null){
 			if((row.startsWith(",") == false)){ //ignore anything that starts with a comma
@@ -70,6 +70,9 @@ public class Catalogue {
 			}
 		}
 		reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		//now all my rows should be in the lines, so use that to examine and operate on
 		
 		Iterator<String> iterator = Inventory.iterator();
@@ -85,9 +88,9 @@ public class Catalogue {
 				
 				tempRow = iterator.next();
 				
-				if(tempRow.startsWith("//")){
+				if(tempRow.startsWith("//")){ //TODO
 					//do nothing to it and just print
-				} else if(tempRow.startsWith(",")){
+				} else if(tempRow.startsWith(",")){ //TODO
 					//actually do nothing at all with the line
 				} else {
 					//parse normally and put into new CSV
@@ -112,10 +115,10 @@ public class Catalogue {
 					}
 					
 					String result = itemName;
-					result.concat(","); //comma for CSV file format
-					result.concat(parts[1]); //the units of measurement
-					result.concat(","); //comma for the CSV 
-					result.concat(locationOrders.toString()); //the actual orders
+					result = result.concat(","); //comma for CSV file format
+					result = result.concat(parts[1]); //the units of measurement
+					result = result.concat(","); //comma for the CSV 
+					result = result.concat(locationOrders.toString()); //the actual orders
 					//my string is now formatted, add to list of strings
 					
 					Ordering.add(result); //again a little redundant but will be used in future most likely
@@ -138,7 +141,6 @@ public class Catalogue {
 		} catch (IOException e) {
 		  e.printStackTrace();
 		}
-		return 0; //to make sure it exits properly
 	}
 	
 }

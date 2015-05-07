@@ -12,7 +12,7 @@ public class Item {
 	private String name;
 	private double desiredAmountA;
 	private double desiredAmountB;
-	private double amountOrders;
+	//private double amountOrders; //currently unused but will be used later
 	
 
 	/**
