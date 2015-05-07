@@ -8,11 +8,11 @@ public class Item {
 	 * 
 	 */
 	
-	double count;
-	String name;
-	double desiredAmountA;
-	double desiredAmountB;
-	double amountOrders;
+	private double count;
+	private String name;
+	private double desiredAmountA;
+	private double desiredAmountB;
+	private double amountOrders;
 	
 
 	/**
