@@ -1,6 +1,5 @@
 package larsonja.project;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -11,7 +10,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
@@ -58,11 +56,11 @@ public class MyApplication extends Application {
     	final String[] locations = new String[]{ "BB", "DC", "Total"}; //might need to add a space here where the separator is
     	locationBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>(){
     		public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value){
+    			//set label so i can easily just take it later, wont be renedered onto screen
     			locationLabel.setText(locations[new_value.intValue()]);
     		}
     	});
     
-    	
     	//Defining the inputFileName text field
     	TextField inputFileName = new TextField();
     	inputFileName.setPromptText("Enter the input file name");
@@ -82,10 +80,10 @@ public class MyApplication extends Application {
 	    			if ((inputFileName.getText() != outputFileName.getText()) && inputFileName.getText() != null && !inputFileName.getText().isEmpty() && outputFileName.getText() != null && !outputFileName.getText().isEmpty()) {
 	    				statusLabel.setText("Thank you, generating output now.");
 	    				
-	    				
+	    				//variable creation
 	    				String itemName;
 	    				double count;
-	    				double desiredA; // column 3 for BB, 4 for DC
+	    				double desiredA;
 	    				double desiredB;
 	    				Double locationOrders;
 	    				
@@ -102,20 +100,18 @@ public class MyApplication extends Application {
 	    					flag = 3;
 	    				} else if (location == "DC") {
 	    					flag = 4;
-	    				} //still need to add other option for doing total
+	    				} //still need to add others on this variable to be selected later
 	    				
-	    				
+	    				//get file name and open 
 	    				name = inputFileName.getText();
-	    					    				
-	    				
-	    				name = name.concat(".csv"); //add the file extension onto the end of the file name
+	    				name = name.concat(".csv"); 
 	    				try{
 	    				BufferedReader reader = null;
-	    				reader = new BufferedReader(new FileReader(name)); //start reading from my file
+	    				reader = new BufferedReader(new FileReader(name));
 	    				
-	    				
+	    				//read file out and ignore any blank lines
 	    				while((row = reader.readLine()) != null){
-	    					if((row.startsWith(",") == false)){ //ignore anything that starts with a comma
+	    					if((row.startsWith(",") == false)){ 
 	    						Inventory.add(row);
 	    					}
 	    				}
@@ -123,12 +119,11 @@ public class MyApplication extends Application {
 	    				} catch (IOException r) {
 	    					r.printStackTrace();
 	    				}
-	    				//now all my rows should be in the lines, so use that to examine and operate on
 	    				
 	    				Iterator<String> iterator = Inventory.iterator();
 	    				String tempRow;
 	    				
-	    				//need to make a new file
+	    				//Open new file to start writing to
 	    				Writer writer;
 	    				String inventoryOutputName = outputFileName.getText();
 	    				inventoryOutputName = inventoryOutputName.concat(".csv");
@@ -136,11 +131,11 @@ public class MyApplication extends Application {
 	    				try {
 	    				    writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(inventoryOutputName), "utf-8"));
 	    				    
-	    				    
 	    				    while(iterator.hasNext()){
 	    						
 	    						tempRow = iterator.next();
 	    						
+	    						//decide what to do with each line
 	    						if(tempRow.startsWith("//")){
 	    							//do nothing to it and just print
 	    							Ordering.add(tempRow);
@@ -171,12 +166,12 @@ public class MyApplication extends Application {
 	    								locationOrders = desiredA;
 	    							}
 	    							
+	    							//format my final line to be used by putting in all the information in CSV format
 	    							String result = itemName;
-	    							result = result.concat(","); //comma for CSV file format
-	    							result = result.concat(parts[1]); //the units of measurement
-	    							result = result.concat(","); //comma for the CSV 
-	    							result = result.concat(locationOrders.toString()); //the actual orders
-	    							//my string is now formatted, add to list of strings
+	    							result = result.concat(",");
+	    							result = result.concat(parts[1]);
+	    							result = result.concat(",");
+	    							result = result.concat(locationOrders.toString());
 	    							
 	    							Ordering.add(result); //again a little redundant but will be used in future most likely
 	    						}
@@ -210,15 +205,17 @@ public class MyApplication extends Application {
       	   }
     	});
     
-    	
-    VBox root = new VBox();
-    root.getChildren().addAll(mainLabel, locationBox, inputFileName, outputFileName, goButton, statusLabel);
-    
-    Scene mainScene = new Scene(root, 500, 500);
-    primaryStage.setScene(mainScene);
-    
-    mainScene.getStylesheets().add("larsonja/project/catalogueStyle.css");
-     	
-   	primaryStage.show();
+	    //data type representing the window
+	    VBox root = new VBox();
+	    root.getChildren().addAll(mainLabel, locationBox, inputFileName, outputFileName, goButton, statusLabel);
+	    
+	    //size my screen
+	    Scene mainScene = new Scene(root, 500, 500);
+	    primaryStage.setScene(mainScene);
+	    
+	    //add my css styling
+	    mainScene.getStylesheets().add("larsonja/project/catalogueStyle.css");
+	     	
+	   	primaryStage.show(); //show the final screen
     }
 }
