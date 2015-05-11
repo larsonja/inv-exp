@@ -1,0 +1,36 @@
+
+.root {
+	-fx-background-color: #D3D3D3;
+	-fx-spacing: 30;
+}
+
+.main_label {
+	-fx-font-family: "Arial";
+	-fx-font-size: 24px;
+	-fx-font-weight: bold;
+	-fx-padding: 30;
+}
+.button {
+	-fx-font-family: "Arial";
+	-fx-font-size: 14px;
+	-fx-font-weight: bold;
+	-fx-background-color: #000000;
+	-fx-text-fill: #FFFFFF;
+	-fx-padding: 10;
+}
+
+
+.combo-box {
+}
+
+.combo-pox-popup {
+	
+}
+
+.separator {
+	-fx-padding: 10;
+}
+
+.button:hover{
+	/*do default */
+}

@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Catalogue {
 	/*
 	 * This class represents a catalogue to be used in an inventory system.
