@@ -2,6 +2,8 @@ package larsonja.project;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,6 +29,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.beans.value.ChangeListener;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class MyApplication extends Application {
@@ -104,7 +110,13 @@ public class MyApplication extends Application {
 	    				
 	    				//get file name and open 
 	    				name = inputFileName.getText();
-	    				name = name.concat(".csv"); 
+	    				String tempName = "tempOutputFile";
+	    				
+	    				//now convert excel into csv 
+	    				convertExcelCsv(name, tempName);
+	    				
+	    				name = "tempOutputFile.csv"; //rename it as my temp output file name
+	    				
 	    				try{
 	    				BufferedReader reader = null;
 	    				reader = new BufferedReader(new FileReader(name));
@@ -197,6 +209,9 @@ public class MyApplication extends Application {
 	    				statusLabel.setText("Output has been generated.");	
 	    				
 	    				finishFlag = 1;
+	    				tempName = tempName.concat(".csv");
+	    				File tempFile = new File(tempName);
+	    				tempFile.delete();
 	    				
 	    			} else {
 	    				statusLabel.setText("You have not filled everything in correctly.");
@@ -204,7 +219,10 @@ public class MyApplication extends Application {
     			} while (finishFlag == 0);
       	   }
     	});
-    
+    	
+    	File tempFile = new File("tempOutputFile");
+    	tempFile.delete();
+    	    
 	    //data type representing the window
 	    VBox root = new VBox();
 	    root.getChildren().addAll(mainLabel, locationBox, inputFileName, outputFileName, goButton, statusLabel);
@@ -217,5 +235,47 @@ public class MyApplication extends Application {
 	    mainScene.getStylesheets().add("larsonja/project/catalogueStyle.css");
 	     	
 	   	primaryStage.show(); //show the final screen
+    }
+    
+    
+    void convertExcelCsv(String name, String outputName){
+    	
+    	name = name.concat(".xlsx"); 
+    	
+    	
+    	StringBuffer dataBuffer = new StringBuffer();
+		dataBuffer.append(",");
+		outputName = outputName.concat(".csv");
+    
+	    try{
+			FileOutputStream outputStream = new FileOutputStream(outputName); 
+			
+			FileInputStream inputStream = new FileInputStream(name);
+			
+			XSSFWorkbook workBook = new XSSFWorkbook(inputStream); //TODO fix bug here
+			XSSFSheet workSheet = workBook.getSheetAt(0);
+			
+			Row currentRow;
+			
+			Cell currentCell;
+			
+			//row major ordering
+			Iterator<Row> rowIterator = workSheet.iterator();
+			while(rowIterator.hasNext()){
+				currentRow = rowIterator.next();
+				
+				Iterator<Cell> cellIterator = currentRow.iterator();
+				while(cellIterator.hasNext()){
+					currentCell = cellIterator.next();
+					dataBuffer.append(currentCell + ",");
+				}
+				dataBuffer.append(System.getProperty("line.separator"));
+			}
+			outputStream.write(dataBuffer.toString().getBytes()); //actually writes my file
+			outputStream.close();
+			workBook.close(); 
+		} catch (Exception m){
+			m.printStackTrace();
+		}
     }
 }
