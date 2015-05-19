@@ -49,7 +49,7 @@ public class MyApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
     	
-    	mainLabel = new Label("Inventory Master 0.0.1");
+    	mainLabel = new Label("Inventory Master 0.0.2");
     	mainLabel.getStyleClass().add("main_label");
     	
     	java.awt.Label locationLabel = new java.awt.Label();
@@ -62,7 +62,7 @@ public class MyApplication extends Application {
     	final String[] locations = new String[]{ "BB", "DC", "Total"}; //might need to add a space here where the separator is
     	locationBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>(){
     		public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value){
-    			//set label so i can easily just take it later, wont be renedered onto screen
+    			//set label so i can easily just take it later, wont be rendered onto screen
     			locationLabel.setText(locations[new_value.intValue()]);
     		}
     	});
@@ -252,7 +252,7 @@ public class MyApplication extends Application {
 			
 			FileInputStream inputStream = new FileInputStream(name);
 			
-			XSSFWorkbook workBook = new XSSFWorkbook(inputStream); //TODO fix bug here
+			XSSFWorkbook workBook = new XSSFWorkbook(inputStream);
 			XSSFSheet workSheet = workBook.getSheetAt(0);
 			
 			Row currentRow;

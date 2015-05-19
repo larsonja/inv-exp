@@ -12,8 +12,7 @@ public class Item {
 	private String name;
 	private double desiredAmountA;
 	private double desiredAmountB;
-	//private double amountOrders; //currently unused but will be used later
-	
+	private int flag;	
 
 	/**
 	 * Constructor for the Item class
@@ -28,6 +27,21 @@ public class Item {
 		this.count = count;
 		this.desiredAmountA = desiredAmountA;
 		this.desiredAmountB = desiredAmountB; 
+		this.flag = 0; //default
+	}
+	
+	/**
+	 * Alt constructor to make an item without a count associated with it
+	 * 
+	 * @param name - the name of the item
+	 * @param desiredAmountA - the desired amount of the item for location A
+	 * @param desiredAmountB - the desired amount of the item for location B
+	 */
+	public Item(String name, double desiredAmountA, double desiredAmountB){
+		this.name = name;
+		this.desiredAmountA = desiredAmountA;
+		this.desiredAmountB = desiredAmountB; 
+		this.flag = 0; //default
 	}
 	
 	/**
@@ -39,7 +53,6 @@ public class Item {
 		return s;
 	}
 	
-	
 	/**
 	 * Method to return the count of the item called on
 	 * @return - the count
@@ -50,13 +63,39 @@ public class Item {
 	}
 	
 	/**
+	 * Method to set the count of an item
+	 * @param count - value of the item counted
+	 * @return true if count is set correctly, false otherwise
+	 */
+	public boolean setCount(double count){
+		this.count = count;
+		if(this.count == count)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Method to set the count of an item
+	 * @param - value of the item counted
+	 * @return true if count is set correctly, false otherwise
+	 */
+	public boolean setCount(int count){
+		this.count = (double) count;
+		if(this.count == (double) count)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
 	 * Method to return the desired amount at A
 	 * @return - will return the amount if > 0, otherwise returns 0
 	 */
 	public double getAmountA(){
-		double d = this.desiredAmountA - this.count;
-		if(d > 0){
-			return d;
+		double result = this.desiredAmountA - this.count;
+		if(result > 0){
+			return result;
 		} else {
 			return 0;
 		}
@@ -67,9 +106,9 @@ public class Item {
 	 * @return - will return the amount if > 0, otherwise returns 0
 	 */
 	public double getAmountB(){
-		double d = this.desiredAmountB - this.count;
-		if(d > 0){
-			return d;
+		double result = this.desiredAmountB - this.count;
+		if(result > 0){
+			return result;
 		} else {
 			return 0;
 		}
@@ -85,6 +124,61 @@ public class Item {
 		d[1] = this.getAmountB();		
 		return d;
 	}
+	
+	/**
+	 * Method to get the flag of an item
+	 * @return the flag value (high or low)
+	 */
+	public int getFlag(){
+		int result = this.flag;
+		return result;
+	}
+	
+	/**
+	 * Method to set the flag on the item as high
+	 * @return true if flag set correctly as high
+	 */
+	public boolean setFlag(){
+		this.flag = 1;
+		if (this.flag == 1)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Method to reset the flag on the item as low
+	 * @return true if flag set correctly as low
+	 */
+	public boolean rmFlag(){
+		this.flag = 0;
+		if (this.flag == 0)
+			return true;
+		else
+			return false;
+	}
+	
+	public String toString(){
+		String result = null;
+		
+		/*
+		 * Count should be moved over into being tracked in the Catalogue class but was here for ease of use in development
+		 * TODO look into this issue in the future
+		 */
+		
+		String name = this.name;
+		String flag = String.valueOf(this.getFlag());
+		String desA = String.valueOf(this.desiredAmountA);
+		String desB = String.valueOf(this.desiredAmountB);
+		
+		result = name;
+		result = result.concat("," + flag);
+		result = result.concat("," + desA);
+		result = result.concat("," + desB);
+		
+		return result;		
+	}
+	
 
 	@Override
 	public int hashCode() {
