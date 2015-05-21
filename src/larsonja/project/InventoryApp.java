@@ -35,7 +35,7 @@ import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
-public class MyApplication extends Application {
+public class InventoryApp extends Application {
 	
 	int finishFlag = 0;
 	
@@ -48,6 +48,8 @@ public class MyApplication extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+    	
+    	//will start removing stuff from here and supplementing it into the catalogue class so it will be more just UI on this side
     	
     	mainLabel = new Label("Inventory Master 0.0.2");
     	mainLabel.getStyleClass().add("main_label");
@@ -73,7 +75,7 @@ public class MyApplication extends Application {
 
     	//Defining the outputFileName text field
     	TextField outputFileName = new TextField();
-    	outputFileName.setPromptText("Enter the output file name");
+    	outputFileName.setPromptText("Enter a name for the output file");
     	
     	Label statusLabel = new Label();
     	
@@ -109,13 +111,15 @@ public class MyApplication extends Application {
 	    				} //still need to add others on this variable to be selected later
 	    				
 	    				//get file name and open 
-	    				name = inputFileName.getText();
-	    				String tempName = "tempOutputFile";
+	    				name = ".";
+	    				name = name.concat("\\");
+	    				name = name.concat(inputFileName.getText()); 
+	    				String tempName = "tempOutputFile"; //now is .\inputFileName
 	    				
 	    				//now convert excel into csv 
 	    				convertExcelCsv(name, tempName);
 	    				
-	    				name = "tempOutputFile.csv"; //rename it as my temp output file name
+	    				name = ".\\tempOutputFile.csv"; //rename it as my temp output file name
 	    				
 	    				try{
 	    				BufferedReader reader = null;
@@ -137,7 +141,9 @@ public class MyApplication extends Application {
 	    				
 	    				//Open new file to start writing to
 	    				Writer writer;
-	    				String inventoryOutputName = outputFileName.getText();
+	    				String inventoryOutputName = ".";
+	    				inventoryOutputName = inventoryOutputName.concat("\\");
+	    				inventoryOutputName = inventoryOutputName.concat(outputFileName.getText());
 	    				inventoryOutputName = inventoryOutputName.concat(".csv");
 	    				
 	    				try {
