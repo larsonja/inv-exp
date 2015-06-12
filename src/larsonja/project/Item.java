@@ -27,7 +27,6 @@ public class Item {
 		this.count = count;
 		this.desiredAmountA = desiredAmountA;
 		this.desiredAmountB = desiredAmountB; 
-		this.flag = 0; //default
 	}
 	
 	/**
@@ -135,29 +134,28 @@ public class Item {
 	}
 	
 	/**
-	 * Method to set the flag on the item as high
-	 * @return true if flag set correctly as high
+	 * Method to set the flag of an itme
+	 * @param state - boolean value to represent the state of the flag, high for flag set and low for flag off
+	 * @return - true if flag was set correctly, otherwise false
 	 */
-	public boolean setFlag(){
-		this.flag = 1;
-		if (this.flag == 1)
+	public boolean setFlag(boolean state){
+		if (state){
+			this.flag = 1;
+		} else {
+			this.flag = 0;
+		}
+		if( state && flag == 1){
 			return true;
-		else
-			return false;
+		} else if (state == false && flag == 0){
+			return true;
+		}
+		return false;
 	}
 	
 	/**
-	 * Method to reset the flag on the item as low
-	 * @return true if flag set correctly as low
+	 * Method to convert an item into a string representation
+	 * @return - the string representation of the given item
 	 */
-	public boolean rmFlag(){
-		this.flag = 0;
-		if (this.flag == 0)
-			return true;
-		else
-			return false;
-	}
-	
 	public String toString(){
 		String result = null;
 		
@@ -179,14 +177,24 @@ public class Item {
 		return result;		
 	}
 	
+	/**
+	 * Method to create an item from a string representation of name, desired amount A, desired amount B
+	 * @return - the item representing the string given
+	 */
+	public Item toItem(String strRep){
+		Item returnItem;
+		String[] parts = strRep.split(",");
+		
+		returnItem = new Item(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
+		
+		return returnItem;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		long temp;
-		temp = Double.doubleToLongBits(count);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(desiredAmountA);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(desiredAmountB);
@@ -204,9 +212,6 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (Double.doubleToLongBits(count) != Double
-				.doubleToLongBits(other.count))
-			return false;
 		if (Double.doubleToLongBits(desiredAmountA) != Double
 				.doubleToLongBits(other.desiredAmountA))
 			return false;
@@ -220,5 +225,7 @@ public class Item {
 			return false;
 		return true;
 	}
+	
+
 	
 }

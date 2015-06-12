@@ -51,7 +51,7 @@ public class InventoryApp extends Application {
     	
     	//will start removing stuff from here and supplementing it into the catalogue class so it will be more just UI on this side
     	
-    	mainLabel = new Label("Inventory Master 0.0.2");
+    	mainLabel = new Label("Inventory Master 0.0.3");
     	mainLabel.getStyleClass().add("main_label");
     	
     	java.awt.Label locationLabel = new java.awt.Label();
@@ -149,12 +149,12 @@ public class InventoryApp extends Application {
 	    				try {
 	    				    writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(inventoryOutputName), "utf-8"));
 	    				    
-	    				    while(iterator.hasNext()){
-	    						
+	    				    while(iterator.hasNext()){ 
+	    				    	
 	    						tempRow = iterator.next();
 	    						
 	    						//decide what to do with each line
-	    						if(tempRow.startsWith("//")){
+	    						if(tempRow.startsWith("//")){ 
 	    							//do nothing to it and just print
 	    							Ordering.add(tempRow);
 	    							
@@ -165,8 +165,11 @@ public class InventoryApp extends Application {
 	    							String[] parts = tempRow.split(",");
 	    							itemName = parts[0];
 	    							count = Double.valueOf(parts[2]);
-	    							
-	    							Item currentItem = new Item(itemName, count, Double.valueOf(parts[3]), Double.valueOf(parts[4]));
+	    							double desA = Double.valueOf(parts[3]);
+	    							double desB = Double.valueOf(parts[4]);
+
+	    							Item currentItem = new Item(parts[0], count, desA, desB);
+	    							//TODO error processing when missing desired numbers, prompt for them and add them in
 	    							/*
 	    							 * creating the item here is redundant as we could just do the calculations and it would be simple enough
 	    							 * however the goal of this project is to be a functional core of a bigger project that will be build off of this.
@@ -184,14 +187,16 @@ public class InventoryApp extends Application {
 	    								locationOrders = desiredA;
 	    							}
 	    							
-	    							//format my final line to be used by putting in all the information in CSV format
-	    							String result = itemName;
-	    							result = result.concat(",");
-	    							result = result.concat(parts[1]);
-	    							result = result.concat(",");
-	    							result = result.concat(locationOrders.toString());
+	    							if(locationOrders != 0){ //TODO remove this later then we store data
+		    							//format my final line to be used by putting in all the information in CSV format
+		    							String result = itemName;
+		    							result = result.concat(",");
+		    							result = result.concat(parts[1]);
+		    							result = result.concat(",");
+		    							result = result.concat(locationOrders.toString());
 	    							
-	    							Ordering.add(result); //again a little redundant but will be used in future most likely
+	    								Ordering.add(result); //again a little redundant but will be used in future most likely
+	    							}
 	    						}
 	    					}
 	    				    
@@ -250,7 +255,6 @@ public class InventoryApp extends Application {
     	
     	
     	StringBuffer dataBuffer = new StringBuffer();
-		dataBuffer.append(",");
 		outputName = outputName.concat(".csv");
     
 	    try{
