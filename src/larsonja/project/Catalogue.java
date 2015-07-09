@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Iterator;
 
 
-
 public class Catalogue {
 	/*
 	 * This class represents a catalogue to be used in an inventory system.
@@ -23,21 +22,21 @@ public class Catalogue {
 	 */
 	
 	File catalogueFile;
-	/*
-	 * want format to be:
-	 * name, unit, flag, desiredA, desiredB, count1, count2, count3, etc...
-	 * flag can be used for whatever, but this one will be used as an override on the trend stuff being done later
+	/* TODO realize this should just be a group of items as a backbone, the inventory counts should be dealt with elsewhere
+	 * as it's more of the functionality. Do this later though after basics are working then transition elsewhere
+	 * want format to be: (brackets represent the item.toString representation)
+	 * (name, flag, desiredA, desiredB), unit, notes, count1, count2, count3, etc...
+	 * flag can be used for whatever, but  one will be used as an override on the trend stuff being done later
 	 */
 	BufferedReader catalogueReader;
 	Writer catalogueWriter;
 	ArrayList<String> catalogueArray; //each string will be one line of text, where index is the line of the file originally ended by a null character
-	// TODO should add a grouping of ITEMs that will be used for comparison and searching
 	
 	
 	/**
 	 * Constructor to make a data file for a location, will be formatted so methods can be used to return information given by the catalogue
 	 * @param location - name of the location for the catalogue
-	 * @throws IOException 
+	 * @throws IOException 	
 	 */
 	public Catalogue(String location) throws IOException, RuntimeException{
 
@@ -47,6 +46,7 @@ public class Catalogue {
 		path = path.concat(location);
 		
 		this.catalogueFile = new File(path); 
+		this.catalogueArray = new ArrayList<String>();
 
 		
 		if (!this.catalogueFile.exists()){
@@ -75,7 +75,8 @@ public class Catalogue {
 				
 				String line = this.catalogueReader.readLine();
 				
-				for(int i = 0;  line != null; i++){
+				for(@SuppressWarnings("unused")
+				int i = 0;  line != null; i++){
 					this.catalogueArray.add(line); 
 					line = this.catalogueReader.readLine();
 				} //fills catalogueArray with the file info so therefore we can now modify it line by line (should only need to make additions to the lines)
@@ -101,27 +102,32 @@ public class Catalogue {
 	}
 	
 	/*
-	 * Needs to manipulate file
-	 * add item /done
-	 * remove item /done - way easier
 	 * delete item (one removes it from view (hides it but keeps the info) and the other fully deletes it) TODO add flag to deal with this
+	 * find if the catalogue already has the item in it (uses the .equals)
 	 * flag an item
 	 */
 	
-	
-	public boolean removeItem(Item item){
-		boolean result = false;
+	/**
+	 * Method to remove an item from the catalogue
+	 * @param item - the item to be removed
+	 * @return 1 if successfully removed, 0 if not found, 2 if an error occured
+	 * 	 */
+	public int removeItem(Item item){
+		int result = 2;
 		String itemName = item.getName();
-		int minArray = 0;
-		int maxArray = this.catalogueArray.size() - 1; //because arrays start at 0
 		
-		int indexRemoveAt = binary_search(this.catalogueArray, itemName, minArray, maxArray);
+		Iterator<String> iterator = catalogueArray.iterator();
 		
-		for(int index = indexRemoveAt ; index < maxArray - 1 ; index++){
-			this.catalogueArray[index] = this.catalogueArray[index + 1];
-		} //will override the indexRemoveAt variable then keeps everything else, moving it down
+		while(iterator.hasNext()){ //will miss the first row but it's the title row so it's fine to skip
+			if(iterator.next().startsWith(itemName)){
+				catalogueArray.remove(iterator.next()); //removes it
+				result = 1;
+			}
+		}
 		
-		result = true;
+		Collections.sort(catalogueArray);
+		result = 0;
+		
 		return result;
 	}
 	
@@ -133,60 +139,66 @@ public class Catalogue {
 	public boolean addItem(Item item){
 		boolean result = false;
 		
-		String itemName = item.getName();
-		int minArray = 0;
-		int maxArray = this.catalogueArray.length - 1; //because arrays start at 0
-		
-		int indexAddAt = binary_search(this.catalogueArray, itemName, minArray, maxArray);
-		
-		//Now have the index it should be added at so start moving things down
 		String itemString = item.toString();
 		
-		//TODO look over this because it's wrong
-		String tempLineA = this.catalogueArray[indexAddAt]; //preload it 
-		String tempLineB;
+		String commaString = catalogueArray.get(2); // will be a row with the correct number of commas so use this to get comma count for new items
+		int commaNumber = 0;
+		int strLen = commaString.length();
 		
-		for(int index = indexAddAt ; indexAddAt < maxArray ; index++){
-			
-			tempLineB = this.catalogueArray[index+1];
-			
-			this.catalogueArray[index+1] = tempLineA;
-			
-			tempLineA = tempLineB;
-			
+		for( int i = 0; i < strLen - 1; i ++){
+			if(commaString.charAt(i) == ','){
+				commaNumber++;
+			}
 		}
-		this.catalogueArray[indexAddAt] = itemString; //item is now in the correct array
+		//now have the correct number of commas, of which the item in string rep should have 3 with none at the end
+		commaNumber = commaNumber - 3; //sets it to the correct amount	
+		
+		for( int i = 0; i < commaNumber ; i++){
+			itemString = itemString.concat(","); // adds commas
+		}
+		//now add to the list and sort
+		
+		catalogueArray.add(itemString);
+		Collections.sort(catalogueArray);
 		
 		result = true;
 		return result;
 	}
 	
-	/**
-	 * Method to find index of where a word should go in an array of strings by lexigraphical ordering
-	 * @param field - the array of strings to search through
-	 * @param KEY - the string you're trying to add
-	 * @param MIN - the min index
-	 * @param MAX - the max index
-	 * @return the index at which your KEY is, -1 if key not found
-	 */
-	private int binary_search(String[] field, String KEY, int MIN, int MAX){ //TODO think there's an error here re: comparing full item string to just the name/using startsWith
+	
+	public boolean addItem(String itemString){
+		boolean result = false;
 		
-		if(MAX < MIN){ //because i want this to return where it would go, i then need to return the previous MID value here
-			return -1;
-		} else {
-			int MID = (MAX + MIN)/2; //will truncate value effectively rounding down always
-			
-			if( field[MID].compareTo(KEY) > 0){
-				--MID;
-				return binary_search(field, KEY, MIN, MID);
-			} else if ( field[MID].compareTo(KEY) < 0){
-				++MID;
-				return binary_search(field, KEY, MID, MAX);
-			} else {
-				 //key is found
-				return MID;
+		String commaString = catalogueArray.get(2);
+		int commaNumber = 0;
+		int strLen = commaString.length();
+		
+		for( int i= 0; i< strLen - 1; i++){
+			if(commaString.charAt(i) == ','){
+				commaNumber++;
 			}
-			
 		}
+		commaNumber = commaNumber - 3;
+		
+		for( int i = 0; i <commaNumber ; i++){
+			itemString = itemString.concat("'");
+		}
+		
+		catalogueArray.add(itemString);
+		Collections.sort(catalogueArray);
+		result = true;
+		return result;
+	}
+	
+	public boolean matches(Item item){
+		//should be able to pull an item from an index of the catalogue		
 	}
 }	
+
+
+
+
+
+
+
+

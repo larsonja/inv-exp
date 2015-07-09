@@ -159,11 +159,6 @@ public class Item {
 	public String toString(){
 		String result = null;
 		
-		/*
-		 * Count should be moved over into being tracked in the Catalogue class but was here for ease of use in development
-		 * TODO look into this issue in the future
-		 */
-		
 		String name = this.name;
 		String flag = String.valueOf(this.getFlag());
 		String desA = String.valueOf(this.desiredAmountA);

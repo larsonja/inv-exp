@@ -164,7 +164,11 @@ public class InventoryApp extends Application {
 	    							//parse normally and put into new CSV
 	    							String[] parts = tempRow.split(",");
 	    							itemName = parts[0];
-	    							count = Double.valueOf(parts[2]);
+	    							if(parts[2] != null){
+	    								count = Double.valueOf(parts[2]);
+	    							} else {
+	    								count = 0.0;
+	    							}
 	    							double desA = Double.valueOf(parts[3]);
 	    							double desB = Double.valueOf(parts[4]);
 
