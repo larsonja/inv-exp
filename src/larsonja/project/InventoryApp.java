@@ -164,17 +164,19 @@ public class InventoryApp extends Application {
 	    							//parse normally and put into new CSV
 	    							String[] parts = tempRow.split(",");
 	    							itemName = parts[0];
-	    							if(parts[2] != null){
+	    							if(parts[2] != null){ //TODO error processing when missing desired numbers, prompt for them and add them in
 	    								count = Double.valueOf(parts[2]);
-	    							} else {
+	    							} else { 
 	    								count = 0.0;
 	    							}
 	    							double desA = Double.valueOf(parts[3]);
 	    							double desB = Double.valueOf(parts[4]);
 
 	    							Item currentItem = new Item(parts[0], count, desA, desB);
-	    							//TODO error processing when missing desired numbers, prompt for them and add them in
+	    							
 	    							/*
+	    							 * TODO do something with the item and streamline the next segment of code
+	    							 * 
 	    							 * creating the item here is redundant as we could just do the calculations and it would be simple enough
 	    							 * however the goal of this project is to be a functional core of a bigger project that will be build off of this.
 	    							 * Hence why we create the object here. otherwise you can just deal with the calculations after this comment

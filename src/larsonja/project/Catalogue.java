@@ -22,16 +22,16 @@ public class Catalogue {
 	 */
 	
 	File catalogueFile;
-	/* TODO realize this should just be a group of items as a backbone, the inventory counts should be dealt with elsewhere
+	/* TODO realize this should just be a group of items as a backbone, the inventory counts SHOULD be dealt with elsewhere
 	 * as it's more of the functionality. Do this later though after basics are working then transition elsewhere
 	 * want format to be: (brackets represent the item.toString representation)
 	 * (name, flag, desiredA, desiredB), unit, notes, count1, count2, count3, etc...
 	 * flag can be used for whatever, but  one will be used as an override on the trend stuff being done later
 	 */
-	BufferedReader catalogueReader;
+	BufferedReader catalogueReader; //buffered reader doesn't take any performance hit over reader 
 	Writer catalogueWriter;
 	ArrayList<String> catalogueArray; //each string will be one line of text, where index is the line of the file originally ended by a null character
-	
+
 	
 	/**
 	 * Constructor to make a data file for a location, will be formatted so methods can be used to return information given by the catalogue
@@ -61,11 +61,11 @@ public class Catalogue {
 				this.catalogueReader = new BufferedReader(new FileReader(path));
 			} catch (FileNotFoundException x) {
 				x.printStackTrace();
-			}
+			}	
 			
-			//TODO add a header to the file to indicate what it is
-			
-			this.catalogueArray.add("Name,Unit,Flag,DesiredA,DesiredB,"); //this sets it up for the first count column to be added
+			this.catalogueWriter.write(location + " Catalogue,Flag,DesiredA,DesiredB,Unit"); //should be the first line
+		
+			this.catalogueArray.add(location + " Catalogue,Flag,DesiredA,DesiredB,Unit"); //this sets it up for the first count column to be added
 			
 			
 		} else {
@@ -79,7 +79,7 @@ public class Catalogue {
 				int i = 0;  line != null; i++){
 					this.catalogueArray.add(line); 
 					line = this.catalogueReader.readLine();
-				} //fills catalogueArray with the file info so therefore we can now modify it line by line (should only need to make additions to the lines)
+				} //fills catalogueArray with the file info so therefore we can now modify it line by line 
 				
 			} catch (FileNotFoundException x) {
 				x.printStackTrace();
@@ -91,10 +91,23 @@ public class Catalogue {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+						
+			String headerLine = this.catalogueReader.readLine();
 			
-			//TODO read header to make sure it's for the right thing
-			
-			
+			if (!headerLine.startsWith(location + " Catalogue,Flag,DesiredA,DesiredB,Unit")){ //there can be more counts
+				//TODO add error processing
+				/*
+				 * should prompt user for input, asks for the number of an item if it isn't included and not flagged (or change based on flag
+				 * could use a case statement here but if-else would be better optimized to use
+				 */
+			} else {
+				this.catalogueArray.add(headerLine);
+				String currentLine = catalogueReader.readLine();
+				while(currentLine != null){
+					catalogueArray.add(currentLine);
+					currentLine = catalogueReader.readLine();
+				}
+			}
 		}
 		Collections.sort(catalogueArray); //makes sure it's sorted
 		
@@ -104,32 +117,34 @@ public class Catalogue {
 	/*
 	 * delete item (one removes it from view (hides it but keeps the info) and the other fully deletes it) TODO add flag to deal with this
 	 * find if the catalogue already has the item in it (uses the .equals)
-	 * flag an item
+	 * flag an item for something
 	 */
 	
 	/**
 	 * Method to remove an item from the catalogue
 	 * @param item - the item to be removed
 	 * @return 1 if successfully removed, 0 if not found, 2 if an error occured
-	 * 	 */
+	 */
 	public int removeItem(Item item){
 		int result = 2;
 		String itemName = item.getName();
 		
 		Iterator<String> iterator = catalogueArray.iterator();
-		
+		 
 		while(iterator.hasNext()){ //will miss the first row but it's the title row so it's fine to skip
-			if(iterator.next().startsWith(itemName)){
+			if(iterator.next().startsWith(itemName)){ //TODO find a faster way to do this so it isn't so slow
 				catalogueArray.remove(iterator.next()); //removes it
 				result = 1;
+				Collections.sort(catalogueArray);
+				return result;
 			}
 		}
 		
-		Collections.sort(catalogueArray);
 		result = 0;
 		
 		return result;
 	}
+	
 	
 	/**
 	 * Method to add an item to a catalogue
@@ -158,14 +173,18 @@ public class Catalogue {
 		}
 		//now add to the list and sort
 		
-		catalogueArray.add(itemString);
-		Collections.sort(catalogueArray);
+		this.catalogueArray.add(itemString);
+		Collections.sort(this.catalogueArray);
 		
 		result = true;
 		return result;
 	}
 	
-	
+	/**
+	 * Adds an item to a given catalogue from it's string representation
+	 * @param itemString - string form of the item to add
+	 * @return true if added correctly, false otherwise
+	 */
 	public boolean addItem(String itemString){
 		boolean result = false;
 		
@@ -184,15 +203,12 @@ public class Catalogue {
 			itemString = itemString.concat("'");
 		}
 		
-		catalogueArray.add(itemString);
-		Collections.sort(catalogueArray);
+		this.catalogueArray.add(itemString);
+		Collections.sort(this.catalogueArray);
 		result = true;
 		return result;
 	}
 	
-	public boolean matches(Item item){
-		//should be able to pull an item from an index of the catalogue		
-	}
 }	
 
 
