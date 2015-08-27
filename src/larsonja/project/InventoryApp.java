@@ -51,17 +51,17 @@ public class InventoryApp extends Application {
     	
     	//will start removing stuff from here and supplementing it into the catalogue class so it will be more just UI on this side
     	
-    	mainLabel = new Label("Inventory Master 0.0.3");
+    	mainLabel = new Label("Inventory Master 0.0.4");
     	mainLabel.getStyleClass().add("main_label");
     	
     	java.awt.Label locationLabel = new java.awt.Label();
     	
     	//Making my choice box/drop down menu
     	ChoiceBox<Object> locationBox = new ChoiceBox<Object>();
-    	locationBox.setItems(FXCollections.observableArrayList("Brooksbank", "Deep Cove", new Separator(), "All Locations"));
+    	locationBox.setItems(FXCollections.observableArrayList("Brooksbank", "Deep Cove"));
     	locationBox.setTooltip(new Tooltip("Select the location"));
     	
-    	final String[] locations = new String[]{ "BB", "DC", "Total"}; //might need to add a space here where the separator is
+    	final String[] locations = new String[]{ "BB", "DC"}; //might need to add a space here where the separator is
     	locationBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>(){
     		public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value){
     			//set label so i can easily just take it later, wont be rendered onto screen
