@@ -90,7 +90,7 @@ public class InventoryApp extends Application {
 	    				
 	    				//variable creation
 	    				String itemName;
-	    				double count;
+	    				double count = 0;
 	    				double desiredA;
 	    				double desiredB;
 	    				Double locationOrders;
@@ -163,16 +163,36 @@ public class InventoryApp extends Application {
 	    						} else {
 	    							//parse normally and put into new CSV
 	    							String[] parts = tempRow.split(",");
-	    							itemName = parts[0];
-	    							if(parts[2] != null){ //TODO error processing when missing desired numbers, prompt for them and add them in
-	    								count = Double.valueOf(parts[2]);
-	    							} else { 
-	    								count = 0.0;
+	    							
+	    							
+	    							//is too long, so go back from end
+	    							int index = parts.length;
+	    							itemName = "";
+	    							
+	    							index = index - 4; //starts at 0, and 3 back from end should give right index for count
+	    							if(index != 0){
+	    								itemName.concat("\"");
+		    							for( int i = 0; i < index ; i++){
+		    								itemName = itemName.concat(parts[i]);
+		    							}
+		    							itemName.concat("\"");
+	    							} else {
+	    								itemName = parts[index];
 	    							}
-	    							double desA = Double.valueOf(parts[3]);
-	    							double desB = Double.valueOf(parts[4]);
+	    							
+	    							if(parts[index] != null){ //gets count
+	    								
+	    								count = Double.valueOf(parts[index + 1]);
+	    							} else {
+	    								count = 0;
+	    								//TODO add a pop up window to ask for the number of an item
+	    								
+	    							}
+	    							    							
+	    							double desA = Double.valueOf(parts[index + 2]);
+	    							double desB = Double.valueOf(parts[index + 3]);
 
-	    							Item currentItem = new Item(parts[0], count, desA, desB);
+	    							Item currentItem = new Item(itemName, count, desA, desB);
 	    							
 	    							/*
 	    							 * TODO do something with the item and streamline the next segment of code
@@ -256,7 +276,6 @@ public class InventoryApp extends Application {
     
     
     void convertExcelCsv(String name, String outputName){
-    	
     	name = name.concat(".xlsx"); 
     	
     	

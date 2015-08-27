@@ -18,12 +18,17 @@ public class Catalogue {
 	 * This class represents a catalogue to be used in an inventory system.
 	 * 
 	 * @author Jake Larson
-	 * 
+	 * i
 	 */
 	
 	File catalogueFile;
 	/* TODO realize this should just be a group of items as a backbone, the inventory counts SHOULD be dealt with elsewhere
-	 * as it's more of the functionality. Do this later though after basics are working then transition elsewhere
+	 * as it's more of the functionality. Do this later though after basics are working then transition it elsewhere
+	 * 
+	 * Reason this isn't used really yet is due to time constraints of the current project and going back to school, want
+	 * something working before i have way less time to work on it and anything related to the project so i'll have to pick
+	 * it up at a later date if there is time to finish it, employer ok with this plan
+	 * 
 	 * want format to be: (brackets represent the item.toString representation)
 	 * (name, flag, desiredA, desiredB), unit, notes, count1, count2, count3, etc...
 	 * flag can be used for whatever, but  one will be used as an override on the trend stuff being done later
@@ -38,7 +43,7 @@ public class Catalogue {
 	 * @param location - name of the location for the catalogue
 	 * @throws IOException 	
 	 */
-	public Catalogue(String location) throws IOException, RuntimeException{
+	public Catalogue(String location) throws RuntimeException{
 
 		// Will only create the file for a given location once
 		
@@ -63,7 +68,12 @@ public class Catalogue {
 				x.printStackTrace();
 			}	
 			
-			this.catalogueWriter.write(location + " Catalogue,Flag,DesiredA,DesiredB,Unit"); //should be the first line
+			try {
+				this.catalogueWriter.write(location + " Catalogue,Flag,DesiredA,DesiredB,Unit");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} //should be the first line
 		
 			this.catalogueArray.add(location + " Catalogue,Flag,DesiredA,DesiredB,Unit"); //this sets it up for the first count column to be added
 			
@@ -83,6 +93,9 @@ public class Catalogue {
 				
 			} catch (FileNotFoundException x) {
 				x.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			//create writer for my file
@@ -92,7 +105,13 @@ public class Catalogue {
 				e.printStackTrace();
 			}
 						
-			String headerLine = this.catalogueReader.readLine();
+			String headerLine = null;
+			try {
+				headerLine = this.catalogueReader.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			if (!headerLine.startsWith(location + " Catalogue,Flag,DesiredA,DesiredB,Unit")){ //there can be more counts
 				//TODO add error processing
@@ -102,10 +121,21 @@ public class Catalogue {
 				 */
 			} else {
 				this.catalogueArray.add(headerLine);
-				String currentLine = catalogueReader.readLine();
+				String currentLine = null;
+				try {
+					currentLine = catalogueReader.readLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				while(currentLine != null){
 					catalogueArray.add(currentLine);
-					currentLine = catalogueReader.readLine();
+					try {
+						currentLine = catalogueReader.readLine();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

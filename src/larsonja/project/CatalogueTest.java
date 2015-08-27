@@ -17,10 +17,18 @@ public class CatalogueTest {
 	//Create catalogue to test with using the items
 	String testLocation = "testLocation" ;
 	
-	Catalogue testCata = new Catalogue("Test");
+	Catalogue testCata = new Catalogue(testLocation);
+	
+	
+	
 	
 	@Test
 	public final void testCatalogue() {
+		testCata.addItem(testItemA);
+		testCata.addItem(testItemB);
+		testCata.addItem(testItemC);
+		testCata.addItem(testItemD);
+		
 		fail("Not yet implemented"); // TODO
 	}
 
@@ -29,9 +37,10 @@ public class CatalogueTest {
 		fail("Not yet implemented"); // TODO
 	}
 
+	/* Gets tested at the start, so unnecessary.
 	@Test
 	public final void testAddItem() {
-		fail("Not yet implemented"); // TODO
+		fail("Not yet implemented");
 	}
-
+	*/
 }
