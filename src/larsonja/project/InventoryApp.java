@@ -143,12 +143,14 @@ public class InventoryApp extends Application {
             statusLabel.setText("Error in text fields");
           }
         } while (finishFlag != 1);
+        
+        File tempFile = new File("tempOutputFile.csv");
+        tempFile.delete();
+        
         finishFlag = 0;
       }
     });
 
-    File tempFile = new File("tempOutputFile");
-    tempFile.delete();
 
     // data type representing the window
     VBox root = new VBox();
