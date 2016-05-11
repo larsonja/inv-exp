@@ -8,8 +8,8 @@
 	<classpathentry kind="lib" path="lib/poi-3.12-20150511.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.12-20150511.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Java/poi-3.12/ooxml-lib/xmlbeans-2.6.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jake/Desktop/New folder/poi-excelant-3.12-20150511.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jake/Desktop/New folder/poi-ooxml-schemas-3.12-20150511.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jake/Desktop/New folder/poi-scratchpad-3.12-20150511.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jake/git/Inventory/lib/poi-excelant-3.12-20150511.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jake/git/Inventory/lib/poi-ooxml-schemas-3.12-20150511.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jake/git/Inventory/lib/poi-scratchpad-3.12-20150511.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
